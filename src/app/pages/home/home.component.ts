@@ -26,7 +26,7 @@ export class HomeComponent {
 
     timeseries = [
       {
-        title: "3.1 Turkish Lira (TRY) Exchange Rates",
+        title: "Turkish Lira (TRY) Exchange Rates",
         slug: "trk_exchange_rates",
       },
       {

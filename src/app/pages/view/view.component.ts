@@ -137,7 +137,7 @@ export class ViewComponent {
           type: "hist",
           title: "Maximum total people killed",
           xLabel: "Maximum total people killed",
-          yLabel: "Maximum total people killed",
+          yLabel: "How many times",
           xaxis: "Maximum total people killed",
           yaxis: "Maximum total people killed",
           action: 'count'
@@ -147,7 +147,7 @@ export class ViewComponent {
           type: "hist",
           title: "Maximum civilians reported killed",
           xLabel: "Maximum civilians reported killed",
-          yLabel: "Maximum civilians reported killed",
+          yLabel: "How many times",
           xaxis: "Maximum civilians reported killed",
           yaxis: "Maximum civilians reported killed",
           action: 'count'
@@ -157,7 +157,7 @@ export class ViewComponent {
           type: "hist",
           title: "Maximum children reported killed",
           xLabel: "Maximum children reported killed",
-          yLabel: "Maximum children reported killed",
+          yLabel: "How many times",
           xaxis: "Maximum children reported killed",
           yaxis: "Maximum children reported killed",
           action: 'count'
@@ -235,21 +235,123 @@ export class ViewComponent {
           action: 'count'
         },
       ],
-      trk_exchange_rates: [],
-      import_export_trade_data_EU: [],
-      bnb: [
+      trk_exchange_rates: [
         {
           id: "chart1",
           type: "hist",
-          title: "Open Histogram",
-          xLabel: "Date",
-          yLabel: "Open",
-          xaxis: "Open",
-          yaxis: "Open",
+          title: "TRY to USD Histogram",
+          xLabel: "TRY price in USD",
+          yLabel: "How many times",
+          xaxis: "USD_TRY",
+          yaxis: "USD_TRY",
           action: 'sum'
         },
         {
           id: "chart2",
+          type: "line",
+          title: "USD_TRY over Time",
+          xLabel: "Date",
+          yLabel: "USD_TRY",
+          xaxis: "Date",
+          yaxis: "USD_TRY",
+          action: 'sum'
+        },
+        {
+          id: "chart3",
+          type: "line",
+          title: "EUR_TRY over Time",
+          xLabel: "Date",
+          yLabel: "EUR_TRY",
+          xaxis: "Date",
+          yaxis: "EUR_TRY",
+          action: 'sum'
+        },
+        {
+          id: "chart4",
+          type: "line",
+          title: "GBP_TRY over Time",
+          xLabel: "Date",
+          yLabel: "GBP_TRY",
+          xaxis: "Date",
+          yaxis: "GBP_TRY",
+          action: 'sum'
+        },
+      ],
+      import_export_trade_data_EU: [
+        {
+          id: "chart1",
+          type: "line",
+          title: "Total Value USD over Time",
+          xLabel: "Date",
+          yLabel: "USD",
+          xaxis: "DATE",
+          yaxis: "TOTAL VALUE USD",
+          action: 'sum'
+        },
+        {
+          id: "chart2",
+          type: "bar",
+          title: "Total Value USD by Export Country",
+          xLabel: "EXPORT COUNTRY",
+          yLabel: "USD",
+          xaxis: "EXPORT COUNTRY",
+          yaxis: "TOTAL VALUE USD",
+          action: 'sum'
+        },
+        {
+          id: "chart4",
+          type: "hist",
+          title: "Distribution of HS Codes",
+          xLabel: "EXPORT COUNTRY",
+          yLabel: "USD",
+          xaxis: "HS CODE",
+          yaxis: "HS CODE",
+          action: 'sum'
+        },
+        {
+          id: "chart3",
+          type: "pie",
+          title: "Percentage of Total Value by Currency",
+          xLabel: "EXPORT COUNTRY",
+          yLabel: "USD",
+          xaxis: "CURRENCY",
+          yaxis: "TOTAL VALUE USD",
+          action: 'sum'
+        },
+      ],
+      bnb: [
+        {
+          id: "chart1",
+          type: "line",
+          title: "Close Price over Time",
+          xLabel: "Date",
+          yLabel: "Close",
+          xaxis: "Date",
+          yaxis: "Close",
+          action: 'sum'
+        },
+        {
+          id: "chart2",
+          type: "line",
+          title: "High Price over Time",
+          xLabel: "Date",
+          yLabel: "High",
+          xaxis: "Date",
+          yaxis: "High",
+          action: 'sum'
+        },
+        {
+          id: "chart3",
+          type: "hist",
+          title: "Close Histogram",
+          xLabel: "Date",
+          yLabel: "Close",
+          xaxis: "Close",
+          yaxis: "Close",
+          action: 'sum'
+        },
+        {
+          id: "chart4",
           type: "line",
           title: "Volume over Time",
           xLabel: "Date",
@@ -263,6 +365,10 @@ export class ViewComponent {
   slug: any;
 
   summaryActions: any = {
+    trk_exchange_rates: {
+      title: "Max ",
+      action: "max"
+    },
     bnb: {
       title: "Max ",
       action: "max"
@@ -317,6 +423,7 @@ export class ViewComponent {
   }
 
   visuals(df: DataFrame) {
+    df.dropNa({ axis: 1, inplace: true })
     this.charts[this.route.snapshot.params['slug']].forEach((chart) => {
       let new_df: DataFrame;
       switch (chart.action) {
@@ -366,8 +473,8 @@ export class ViewComponent {
             layout: options.layout,
             config: {
               labels: chart.xaxis,
-              values: chart.yaxis + "_count",
-              columns: [chart.xaxis, chart.yaxis + "_count"]
+              values: chart.yaxis + `_${chart.action}`,
+              columns: [chart.xaxis, chart.yaxis + `_${chart.action}`,]
 
             }
           });

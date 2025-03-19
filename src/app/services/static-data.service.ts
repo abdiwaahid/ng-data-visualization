@@ -11,15 +11,18 @@ export class StaticDataService {
   info: any = {
     afghanistan: {
       title: "US Airstrikes in Afghanistan",
-      description: `The dataset on US airstrikes in Afghanistan, sourced from Kaggle, provides a detailed record of individual strike events. Each entry represents a single strike and includes information such as the strike ID, date, location (village, district, province), type of attack, reported target, and casualty figures. This dataset is static because it represents a historical record of events that have already occurred and will not change. While the data was collected over a period of time, the final dataset represents a fixed collection of events.`
+      description: `The dataset on US airstrikes in Afghanistan, sourced from Kaggle, provides a detailed record of individual strike events. Each entry represents a single strike and includes information such as the strike ID, date, location (village, district, province), type of attack, reported target, and casualty figures. This dataset is static because it represents a historical record of events that have already occurred and will not change. While the data was collected over a period of time, the final dataset represents a fixed collection of events.
+      Features: Strike ID: Unique identifier for the strike, Date: Date of the strike, Village/local area: Location of the strike, District: District of the strike, Province: Province of the strike, Type of attack: Type of attack, Minimum total people killed: Minimum number of people killed, Maximum total people killed: Maximum number of people killed, etc.`
     },
     pakistan: {
       title: "US Airstrikes in Pakistan",
-      description: `Similar to the Afghanistan dataset, the US airstrikes in Pakistan dataset contains information on individual strike events. It includes details such as the date, location, type of attack, reported target, and casualty figures. This dataset is also static because it represents a completed historical record of strikes conducted in Pakistan. The data is a snapshot of events that have already happened, and the information is not subject to change.`
+      description: `Similar to the Afghanistan dataset, the US airstrikes in Pakistan dataset contains information on individual strike events. It includes details such as the date, location, type of attack, reported target, and casualty figures. This dataset is also static because it represents a completed historical record of strikes conducted in Pakistan. The data is a snapshot of events that have already happened, and the information is not subject to change.
+      Features: Strike ID: Unique identifier for the strike, Date: Date of the strike, Location: Location of the strike, Area: Area of the strike, Minimum total people killed: Minimum number of people killed, Maximum total people killed: Maximum number of people killed, etc.`
     },
     yemen: {
       title: "US Airstrikes in Yemen",
-      description: `The US airstrikes in Yemen dataset follows the same structure as the Afghanistan and Pakistan datasets, providing a record of individual strike events with details on the date, location, target, and casualties. Like the other two datasets, this dataset is static, representing a historical record of completed airstrikes. The data represents a fixed set of events that have occurred in the past.`
+      description: `The US airstrikes in Yemen dataset follows the same structure as the Afghanistan and Pakistan datasets, providing a record of individual strike events with details on the date, location, target, and casualties. Like the other two datasets, this dataset is static, representing a historical record of completed airstrikes. The data represents a fixed set of events that have occurred in the past.
+      Features: Strike ID: Unique identifier for the strike, Date: Date of the strike, Location: Location of the strike, Province: Province of the strike, Type of attack: Type of attack, Minimum people killed: Minimum number of people killed, Maximum people killed: Maximum number of people killed, etc.`
     },
     trk_exchange_rates: {
       title: "Turkish Lira (TRY) Exchange Rates",
