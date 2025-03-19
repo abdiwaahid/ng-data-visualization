@@ -235,8 +235,39 @@ export class ViewComponent {
           action: 'count'
         },
       ],
+      trk_exchange_rates: [],
+      import_export_trade_data_EU: [],
+      bnb: [
+        {
+          id: "chart1",
+          type: "hist",
+          title: "Open Histogram",
+          xLabel: "Date",
+          yLabel: "Open",
+          xaxis: "Open",
+          yaxis: "Open",
+          action: 'sum'
+        },
+        {
+          id: "chart2",
+          type: "line",
+          title: "Volume over Time",
+          xLabel: "Date",
+          yLabel: "Volume",
+          xaxis: "Date",
+          yaxis: "Volume",
+          action: 'sum'
+        },
+      ]
     }
   slug: any;
+
+  summaryActions: any = {
+    bnb: {
+      title: "Max ",
+      action: "max"
+    }
+  }
 
   constructor(private route: ActivatedRoute, private staticService: StaticDataService) {
     this.slug = this.route.snapshot.params['slug'];
@@ -249,14 +280,36 @@ export class ViewComponent {
 
   async getSummary() {
     let data = await this.staticService.getData(this.route.snapshot.params['slug']);
-    const columns = data.columns    
+    const columns = data.columns
+
     let summary = [];
     for (let i = 0; i < columns.length; i++) {
       let column = columns[i];
-      if (data.column(column).dtype.includes('int')) {
+
+      if (data.column(column).dtype.includes('int') || data.column(column).dtype.includes('float')) {
+        const action = this.summaryActions[this.slug] ?? {
+          title: "",
+          action: "sum"
+        };
+
+        let sum = 0;
+        switch (action.action) {
+          case "sum":
+            sum = data.column(column).sum();
+            break;
+          case "max":
+            sum = data.column(column).max();
+            break;
+          case "min":
+            sum = data.column(column).min();
+            break;
+          default:
+            break;
+        }
+
         summary.push({
-          title: columns[i],
-          sum: data.column(column).sum()
+          title: action.title + columns[i],
+          sum: sum
         })
       }
     }
@@ -265,14 +318,29 @@ export class ViewComponent {
 
   visuals(df: DataFrame) {
     this.charts[this.route.snapshot.params['slug']].forEach((chart) => {
-      const new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).count();
-      console.log(new_df.columns);
-      
+      let new_df: DataFrame;
+      switch (chart.action) {
+        case "count":
+          new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).count();
+          break;
+        case "sum":
+          new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).sum();
+          break;
+        case "max":
+          new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).max();
+          break;
+        case "min":
+          new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).min();
+          break;
+        default:
+          new_df = df.groupby([chart.xaxis]).col([chart.yaxis]).count();
+          break;
+      }
       const options = {
         layout: {
           title: chart.title,
           height: 500,
-          width:"100%",
+          width: "100%",
           xaxis: {
             title: chart.xLabel
           },
@@ -282,9 +350,10 @@ export class ViewComponent {
         },
         config: {
           x: chart.xaxis,
-          y: chart.yaxis + "_count"
+          y: chart.yaxis + `_${chart.action}`
         }
       }
+
       switch (chart.type) {
         case "bar":
           new_df.plot(chart.id).bar(options);
@@ -294,7 +363,7 @@ export class ViewComponent {
           break;
         case "pie":
           new_df.plot(chart.id).pie({
-            layout:options.layout,
+            layout: options.layout,
             config: {
               labels: chart.xaxis,
               values: chart.yaxis + "_count",
@@ -304,7 +373,9 @@ export class ViewComponent {
           });
           break
         case "hist":
-          new_df.plot(chart.id).hist(options);
+          new_df[chart.yaxis].plot(chart.id).hist({
+            layout: options.layout
+          });
           break
         default:
           new_df.plot(chart.id).bar(options);
